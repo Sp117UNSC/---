@@ -209,29 +209,28 @@ public:
 
 
 int main() {
-	//Node *tree = new Node(6);
-	//
-	//int a[5] = { 9, 8, 11, 10, 12};
+	Node *tree = new Node(6);
+	
+	int a[5] = { 9, 8, 11, 10, 12};
 
-	//for (int i = 0; i < 5; i++)
-	//{
-	//	tree->add(a[i]);
-	//}
+	for (int i = 0; i < 5; i++)
+	{
+		tree->add(a[i]);
+	}
 
-	//tree->print();
+	tree->print();
 
-	//tree->find(9)->rot_l();
+	tree->find(9)->rot_l();
 
-	//tree->print();
+	tree->print();
 
-	//delete tree;
+	delete tree;
 
 	//string c;
 
 	//while (strcmp(c,'exit') {
 	//	cin >> c;
-
 	//}
 
-	//return 0;
+	return 0;
 }
