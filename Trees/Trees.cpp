@@ -46,7 +46,7 @@ public:
 			right->add(val);
 		}
 		else if ((val == value) & unic) {
-			cout << "Node already exists";
+			cout << "\nNode already exists\n";
 			return;
 		}
 		else {
@@ -83,7 +83,9 @@ public:
 			right->find(val, print);
 		}
 		else {
-			cout << "\nNo such node\n";
+			if (print) {
+				cout << "\nNo such node\n";
+			}
 			return nullptr;
 		}
 	}
@@ -220,11 +222,58 @@ int main() {
 
 	tree->print();
 
-	tree->find(9)->rot_l();
+	//tree->find(9)->rot_l();
 
-	tree->print();
+	//tree->print();
 
-	delete tree;
+	//delete tree;
+
+	//Node *tree = nullptr;
+
+	string c;
+
+	bool print_mode = 0;
+
+	while (c != "exit") {
+		getline(cin, c);
+
+		if (c.find("add ") == 0) {
+			if (tree == nullptr) {
+				tree = new Node(stoi(c.substr(c.rfind(" ")+1)));
+			}
+			else {
+				tree->add(stoi(c.substr(c.rfind(" ")+1)));
+			}
+		}
+		else if ((c.find("find ") == 0) & (tree != nullptr)) {
+			tree->find(stoi(c.substr(c.rfind(" ")+1)), 1);
+		}
+		else if ((c.find("del ") == 0) & (tree != nullptr)) {
+			tree->del(stoi(c.substr(c.rfind(" ")+1)));
+		}
+		else if ((c.find("del subtree ") == 0) & (tree != nullptr)) {
+			delete tree->find(stoi(c.substr(c.rfind(" ")+1)));
+		}
+		else if ((c.find("del tree") == 0) & (tree != nullptr)) {
+			delete tree;
+		}
+		else if ((c.find("print") == 0) & (tree != nullptr)) {
+			tree->print();
+		}
+		else if (c.find("print mode ") == 0) {
+			print_mode = stoi(c.substr(c.rfind(" ")+1));
+		}		
+		else {
+			cout << "Wrong command\n";
+		}
+
+		
+		
+		if ((print_mode) & (tree != nullptr)) {
+			tree->print();
+			cout << "\n";
+		}
+	}
 
 	return 0;
 }
