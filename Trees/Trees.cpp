@@ -226,12 +226,12 @@ int main() {
 
 	//delete tree;
 
-	string c;
+	//string c;
 
-	while (strcmp(c,'exit') {
-		cin >> c;
+	//while (strcmp(c,'exit') {
+	//	cin >> c;
 
-	}
+	//}
 
-	return 0;
+	//return 0;
 }
