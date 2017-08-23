@@ -222,13 +222,13 @@ int main() {
 
 	tree->print();
 
-	//tree->find(9)->rot_l();
+	/*delete tree->find(11);
 
-	//tree->print();
+	tree->print();
 
-	//delete tree;
+	delete tree;*/
 
-	//Node *tree = nullptr;
+	Node *tree = nullptr;
 
 	string c;
 
