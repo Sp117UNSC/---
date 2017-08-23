@@ -152,8 +152,8 @@ public:
 			Node* m = right;
 			if (right->left == nullptr) {
 				value = m->value;
-				right = m->right;
 				right->parent = this;
+				right = m->right;
 				delete m;
 			}
 			else {
@@ -167,10 +167,6 @@ public:
 			son_side()->parent = parent;
 			delete this;
 		}
-	}
-
-	void del(Node* n) {
-		n->del();
 	}
 
 	void del(int val) {
@@ -214,7 +210,7 @@ public:
 int main() {
 	Node *tree = new Node(6);
 	
-	int a[5] = { 9, 8, 11, 10, 12};
+	int a[5] = {9, 8, 11, 10, 12};
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -227,7 +223,7 @@ int main() {
 
 	tree->print();
 
-	delete tree;*/
+	*/
 
 	string c;
 
@@ -255,7 +251,11 @@ int main() {
 			tree->find(stoi(c.substr(c.rfind(" ")+1)), 1);
 		}
 		else if ((c.find("del subtree ") == 0) & (tree != nullptr)) {
-			delete tree->find(stoi(c.substr(c.rfind(" ")+1)));
+			Node *n = tree->find(stoi(c.substr(c.rfind(" ") + 1)));
+			delete n;
+			if (n == tree) {
+				tree = nullptr;
+			}
 		}
 		else if ((c.find("del tree") == 0) & (tree != nullptr)) {
 			delete tree;
@@ -275,6 +275,8 @@ int main() {
 		}
 
 	}
+
+	delete tree;
 
 	return 0;
 }
