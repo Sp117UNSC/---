@@ -38,7 +38,7 @@ public:
 		prnt_side() = nullptr;
 	}
 
-	void add(int val, bool unic = 1) {
+	bool add(int val, bool unic = 1) {
 
 		if ((left != nullptr) & (val < value)) {
 			left->add(val);
@@ -48,10 +48,11 @@ public:
 		}
 		else if ((val == value) & unic) {
 			cout << "\nNode already exists\n";
-			return;
+			return false;
 		}
 		else {
 			add_son(val);
+			return true;
 		}
 	}
 
@@ -169,14 +170,16 @@ public:
 		}
 	}
 
-	void del(int val) {
-		Node* n = find(val);
+	bool del(int val) {
+		Node* n = find(val, 1);
 
 		if (n == nullptr) {
-			return;
+			return false;
 		}
-
-		n->del();
+		else {
+			n->del();
+			return true;
+		}
 	}
 
 	void print() {
@@ -206,6 +209,8 @@ public:
     }
 };
 
+void cmds(Node*);
+void help();
 
 int main() {
 	Node *tree = new Node(6);
@@ -217,38 +222,51 @@ int main() {
 		tree->add(a[i]);
 	}
 
-	//tree->print();
+	cout << "Type \"help\" to see the list of commands\n";
 
-	/*delete tree->find(11);
+	cmds(tree);
 
-	tree->print();
+	delete tree;
 
-	*/
+	return 0;
+}
 
+void cmds(Node* tree) {
 	string c;
 
-	bool print_mode = 1;
+	bool print_mode = true;
+	bool cmd_print = true;
 
 	while (c != "exit") {
 
-		if ((print_mode) & (tree != nullptr)) {
+		if ((print_mode) & (tree != nullptr) & cmd_print) {
 			tree->print();
 			cout << "\n";
 		}
 
+		cmd_print = true;
+
 		cout << "\n";
 		getline(cin, c);
+		while (c.back() == ' ') {
+			c.erase(c.end()-1);
+		}
 
 		if (c.find("add ") == 0) {
+			bool success;
 			if (tree == nullptr) {
-				tree = new Node(stoi(c.substr(c.rfind(" ")+1)));
+				tree = new Node(stoi(c.substr(c.rfind(" ") + 1)));
 			}
 			else {
-				tree->add(stoi(c.substr(c.rfind(" ")+1)));
+				success = tree->add(stoi(c.substr(c.rfind(" ") + 1)));
+			}
+			if (!success) {
+				cmd_print = false;
 			}
 		}
 		else if ((c.find("find ") == 0) & (tree != nullptr)) {
-			tree->find(stoi(c.substr(c.rfind(" ")+1)), 1);
+			tree->find(stoi(c.substr(c.rfind(" ") + 1)), 1);
+			cmd_print = false;
 		}
 		else if ((c.find("del subtree ") == 0) & (tree != nullptr)) {
 			Node *n = tree->find(stoi(c.substr(c.rfind(" ") + 1)));
@@ -262,21 +280,46 @@ int main() {
 			tree = nullptr;
 		}
 		else if ((c.find("del ") == 0) & (tree != nullptr)) {
-			tree->del(stoi(c.substr(c.rfind(" ") + 1)));
+			bool success;
+			success = tree->del(stoi(c.substr(c.rfind(" ") + 1)));
+			if (!success) {
+				cmd_print = false;
+			}
 		}
 		else if (c.find("print mode ") == 0) {
 			print_mode = stoi(c.substr(c.rfind(" ") + 1));
+			cmd_print = false;
+		}
+		else if (c.find("print mode") == 0) {
+			cout << "\nprint mode " << print_mode << '\n';
+			cmd_print = false;
 		}
 		else if ((c.find("print") == 0) & (tree != nullptr)) {
+			cout << '\n';
 			tree->print();
-		}	
+			cmd_print = false;
+		}
+		else if (c.find("help") == 0) {
+			cout << '\n';
+			help();
+			cmd_print = false;
+		}
 		else {
-			cout << "Wrong command\n";
+			cout << "\nWrong command\n";
+			cmd_print = false;
 		}
 
 	}
 
-	delete tree;
-
-	return 0;
+}
+void help() {
+	cout << "\nadd [val]         - adds a node with value [val] to the tree,\n";
+	cout << "                    or creates new tree if tree is emty\n";
+	cout << "\ndel [val]         - deletes node with the value [val]\n";
+	cout << "\ndel subtree [val] - deltes node vith the value [val] and all his subtrees\n";
+	cout << "\ndel tree          - deletes whole tree\n";
+	cout << "\nprint             - prints tree\n";
+	cout << "\nprint mode [val]  - displays(sets when [val] is given) print_mode parameter,\n";
+	cout << "                    which enables tree pritnting after each change\n";
+	cout << "\nhelp              - shows the list of commans\n";
 }
