@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include <string>
 #include <iostream>
+#include <vector>
 using namespace std;
 
 class Node
@@ -213,14 +214,7 @@ void cmds(Node*);
 void help();
 
 int main() {
-	Node *tree = new Node(6);
-	
-	int a[5] = {9, 8, 11, 10, 12};
-
-	for (int i = 0; i < 5; i++)
-	{
-		tree->add(a[i]);
-	}
+	Node *tree = nullptr;
 
 	cout << "Type \"help\" to see the list of commands\n";
 
@@ -252,10 +246,28 @@ void cmds(Node* tree) {
 			c.erase(c.end()-1);
 		}
 
-		if (c.find("add ") == 0) {
+		if (c.find("add nodes") == 0) {
+			//vector<int> nodes;
+			getline(cin, c);
+			if (c.back() != ' ') {
+				c.append(" ");
+			}
+			while (c.begin() != c.end()) {
+				string s = c.substr(0, c.find(' ')+1);
+				c.erase(0, c.find(' ')+1);
+				if (tree != nullptr) {
+					tree->add(stoi(s));
+				}
+				else {
+					tree = new Node(stoi(s));
+				}
+			}
+		}
+		else if (c.find("add ") == 0) {
 			bool success;
 			if (tree == nullptr) {
 				tree = new Node(stoi(c.substr(c.rfind(" ") + 1)));
+				success = true;
 			}
 			else {
 				success = tree->add(stoi(c.substr(c.rfind(" ") + 1)));
@@ -315,8 +327,9 @@ void cmds(Node* tree) {
 void help() {
 	cout << "\nadd [val]         - adds a node with value [val] to the tree,\n";
 	cout << "                    or creates new tree if tree is emty\n";
+	cout << "\nadd nodes         - adds array of values separated py spaces to tree\n";
 	cout << "\ndel [val]         - deletes node with the value [val]\n";
-	cout << "\ndel subtree [val] - deltes node vith the value [val] and all his subtrees\n";
+	cout << "\ndel subtree [val] - deltes node vith the value [val] and all its subtrees\n";
 	cout << "\ndel tree          - deletes whole tree\n";
 	cout << "\nprint             - prints tree\n";
 	cout << "\nprint mode [val]  - displays(sets when [val] is given) print_mode parameter,\n";
