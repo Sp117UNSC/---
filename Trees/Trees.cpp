@@ -35,6 +35,7 @@ public:
 		if (right != nullptr) {
 			right->~Node();
 		}
+		prnt_side() = nullptr;
 	}
 
 	void add(int val, bool unic = 1) {
@@ -220,7 +221,7 @@ int main() {
 		tree->add(a[i]);
 	}
 
-	tree->print();
+	//tree->print();
 
 	/*delete tree->find(11);
 
@@ -228,13 +229,18 @@ int main() {
 
 	delete tree;*/
 
-	Node *tree = nullptr;
-
 	string c;
 
-	bool print_mode = 0;
+	bool print_mode = 1;
 
 	while (c != "exit") {
+
+		if ((print_mode) & (tree != nullptr)) {
+			tree->print();
+			cout << "\n";
+		}
+
+		cout << "\n";
 		getline(cin, c);
 
 		if (c.find("add ") == 0) {
@@ -248,31 +254,26 @@ int main() {
 		else if ((c.find("find ") == 0) & (tree != nullptr)) {
 			tree->find(stoi(c.substr(c.rfind(" ")+1)), 1);
 		}
-		else if ((c.find("del ") == 0) & (tree != nullptr)) {
-			tree->del(stoi(c.substr(c.rfind(" ")+1)));
-		}
 		else if ((c.find("del subtree ") == 0) & (tree != nullptr)) {
 			delete tree->find(stoi(c.substr(c.rfind(" ")+1)));
 		}
 		else if ((c.find("del tree") == 0) & (tree != nullptr)) {
 			delete tree;
+			tree = nullptr;
+		}
+		else if ((c.find("del ") == 0) & (tree != nullptr)) {
+			tree->del(stoi(c.substr(c.rfind(" ") + 1)));
+		}
+		else if (c.find("print mode ") == 0) {
+			print_mode = stoi(c.substr(c.rfind(" ") + 1));
 		}
 		else if ((c.find("print") == 0) & (tree != nullptr)) {
 			tree->print();
-		}
-		else if (c.find("print mode ") == 0) {
-			print_mode = stoi(c.substr(c.rfind(" ")+1));
-		}		
+		}	
 		else {
 			cout << "Wrong command\n";
 		}
 
-		
-		
-		if ((print_mode) & (tree != nullptr)) {
-			tree->print();
-			cout << "\n";
-		}
 	}
 
 	return 0;
