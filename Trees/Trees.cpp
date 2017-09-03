@@ -247,7 +247,6 @@ void cmds(Node* tree) {
 		}
 
 		if (c.find("add nodes") == 0) {
-			//vector<int> nodes;
 			getline(cin, c);
 			if (c.back() != ' ') {
 				c.append(" ");
@@ -326,13 +325,13 @@ void cmds(Node* tree) {
 }
 void help() {
 	cout << "\nadd [val]         - adds a node with value [val] to the tree,\n";
-	cout << "                    or creates new tree if tree is emty\n";
+	cout << "                    or creates new tree if tree is empty\n";
 	cout << "\nadd nodes         - adds array of values separated py spaces to tree\n";
 	cout << "\ndel [val]         - deletes node with the value [val]\n";
 	cout << "\ndel subtree [val] - deltes node vith the value [val] and all its subtrees\n";
 	cout << "\ndel tree          - deletes whole tree\n";
 	cout << "\nprint             - prints tree\n";
-	cout << "\nprint mode [val]  - displays(sets when [val] is given) print_mode parameter,\n";
+	cout << "\nprint mode [val]  - displays(or sets, when [val] is given) print_mode parameter,\n";
 	cout << "                    which enables tree pritnting after each change\n";
 	cout << "\nhelp              - shows the list of commans\n";
 }
