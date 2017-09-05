@@ -20,7 +20,7 @@ public:
 
 	Node() {}
 
-	Node(int in_val, Node* prnt = nullptr, Node* l_son = nullptr, Node* r_son = nullptr, char clr = 'r') {
+	Node(int in_val, char clr = 'r', Node* prnt = nullptr, Node* l_son = nullptr, Node* r_son = nullptr) {
 		value = in_val;
 		parent = prnt;
 		right = r_son;
@@ -58,7 +58,7 @@ public:
 	}
 
 	void add_son(int val) {
-		Node *n = new Node(val, parent);
+		Node *n = new Node(val);
 
 		if (val < value) {
 			left = n;
@@ -68,6 +68,8 @@ public:
 		}
 
 		n->parent = this;
+		
+		n->insert_balancing();
 	}
 
 	Node* find(int val, bool print = 0) {
@@ -115,32 +117,6 @@ public:
 			}
 		}
 	} 
-
-	void rot_l() {
-		Node* b = right;
-
-		b->parent = parent;
-		prnt_side() = b;
-
-		right = b->left;
-		right->parent = this;
-
-		parent = b;
-		b->left = this;
-	}
-
-	void rot_r() {
-		Node* a = left;
-
-		a->parent = parent;
-		prnt_side() = a;
-
-		left = a->right;
-		left->parent = this;
-
-		parent = a;
-		a->right = this;
-	}
 
 	void del() {
 	
@@ -207,7 +183,131 @@ public:
             }
         }
 		cout << "\nvalue= " << value << '\n';
+		cout << "color= " << color << '\n';
     }
+
+	//Red-Black balancing
+
+	void rot_l() {
+		Node* b = right;
+
+		b->parent = parent;
+		if (parent != 0) {
+			prnt_side() = b;
+		}
+
+		right = b->left;
+		if (right != nullptr) {
+			right->parent = this;
+		}
+
+		parent = b;
+		b->left = this;
+	}
+
+	void rot_r() {
+		Node* a = left;
+
+		a->parent = parent;
+		if (parent != 0) {
+			prnt_side() = a;
+		}
+
+		left = a->right;
+		if (left != nullptr){
+			left->parent = this;
+		}
+
+		parent = a;
+		a->right = this;
+	}
+
+	Node* grandpa() {
+		if ( (parent != nullptr) & (parent->parent != nullptr) ) {
+			return parent->parent;
+		}
+		else {
+			return nullptr;
+		}
+	}
+
+	Node* uncle() {
+		if (grandpa() == nullptr) {
+			return nullptr;
+		}
+
+		if (grandpa()->left == parent) {
+			return grandpa()->right;
+		}
+		else {
+			return grandpa()->left;
+		}
+	}
+
+	void insert_balancing(int c = 0) {
+		
+		if (c != 5) {
+			if (parent == nullptr) {
+				c = 1;
+			}
+			else if (parent->color == 'b') {
+				c = 2;
+			}
+			else if  (uncle() != nullptr) {
+				if (uncle()->color == 'r') {
+					c = 3;
+				}
+				else {
+					c = 4;
+				}
+			}
+			else {
+				c = 4;
+			}
+		}
+
+		switch (c) {
+
+		case 1:
+			color = 'b';
+			break;
+
+		case 2:
+			return;
+
+		case 3:
+			parent->color = 'b';
+			uncle()->color = 'b';
+			grandpa()->color = 'r';
+			grandpa()->insert_balancing();
+			break;
+
+		case 4:
+			if ( (this == parent->right) & (parent == grandpa()->left) ){
+				parent->rot_l();
+				left->insert_balancing(5);
+			}
+			else if ( (this == parent->left) & (parent == grandpa()->right) ) {
+				parent->rot_r();
+				right->insert_balancing(5);
+			}
+			else {
+				insert_balancing(5);
+			}
+			break;
+
+		case 5:
+			parent->color = 'b';
+			grandpa()->color = 'r';
+
+			if ( (this == parent->left) & (parent == grandpa()->left) ) {
+				grandpa()->rot_r();
+			}
+			else {
+				grandpa()->rot_l();
+			}
+		}
+	}
 };
 
 void cmds(Node*);
@@ -258,14 +358,18 @@ void cmds(Node* tree) {
 					tree->add(stoi(s));
 				}
 				else {
-					tree = new Node(stoi(s));
+					tree = new Node(stoi(s),'b');
+				}
+
+				while (tree->parent != nullptr) {
+					tree = tree->parent;
 				}
 			}
 		}
 		else if (c.find("add ") == 0) {
 			bool success;
 			if (tree == nullptr) {
-				tree = new Node(stoi(c.substr(c.rfind(" ") + 1)));
+				tree = new Node(stoi(c.substr(c.rfind(" ") + 1)), 'b');
 				success = true;
 			}
 			else {
@@ -274,6 +378,11 @@ void cmds(Node* tree) {
 			if (!success) {
 				cmd_print = false;
 			}
+			
+			while (tree->parent != nullptr) {
+				tree = tree->parent;
+			}
+
 		}
 		else if ((c.find("find ") == 0) & (tree != nullptr)) {
 			tree->find(stoi(c.substr(c.rfind(" ") + 1)), 1);
