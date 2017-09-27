@@ -70,7 +70,7 @@ public:
 		n->parent = this;
 		
 		//FIXME!
-		//n->insert_balancing();
+		n->insert_balancing();
 	}
 
 	Node* find(Item val, bool print = 0) {
@@ -262,9 +262,6 @@ public:
 					c = 4;
 				}
 			}
-			else {
-				c = 4;
-			}
 		}
 
 		switch (c) {
@@ -316,7 +313,7 @@ public:
 //void help();
 
 int main() {
-	Node<const char*> *tree = new Node<const char*>("Mazafaka");
+	Node<string> *tree = new Node<string>("Mazafaka");
 
 /*
 	cout << "Type \"help\" to see the list of commands\n";
