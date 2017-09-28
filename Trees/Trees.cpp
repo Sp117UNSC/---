@@ -9,8 +9,182 @@ using namespace std;
 template <class Item>
 class Node
 {
+private:
+
+	void add_son(Item val) {
+		Node *n = new Node(val);
+
+		if (val < value) {
+			left = n;
+		}
+		else if (val >= value) {
+			right = n;
+		}
+
+		n->parent = this;
+
+		//FIXME!
+		n->insert_balancing();
+	}
+
+	bool del(Item val) {
+		Node* n = find(val, 1);
+
+		if (n == nullptr) {
+			return false;
+		}
+		else {
+			n->del();
+			return true;
+		}
+	}
+
+	Node*& prnt_side() {
+
+		if (parent != nullptr) {
+			if (parent->left == this) {
+				return parent->left;
+			}
+			else {
+				return parent->right;
+			}
+		}
+	}
+
+	Node* son_side() {
+		if ((left == nullptr) ^ (right == nullptr)) {
+			if (left != nullptr) {
+				return left;
+			}
+			else {
+				return right;
+			}
+		}
+	}
+
+	//Red-Black balancing
+
+	void insert_balancing(int c = 0) {
+
+		if (c != 5) {
+			if (parent == nullptr) {
+				c = 1;
+			}
+			else if (parent->color == 'b') {
+				c = 2;
+			}
+			else if (uncle() != nullptr) {
+				if (uncle()->color == 'r') {
+					c = 3;
+				}
+				else {
+					c = 4;
+				}
+			}
+		}
+
+		switch (c) {
+
+		case 1:
+			color = 'b';
+			break;
+
+		case 2:
+			return;
+
+		case 3:
+			parent->color = 'b';
+			uncle()->color = 'b';
+			grandpa()->color = 'r';
+			grandpa()->insert_balancing();
+			break;
+
+		case 4:
+
+			if ((this == parent->right) & (parent == grandpa()->left)) {
+				parent->rot_l();
+				left->insert_balancing(5);
+			}
+			else if ((this == parent->left) & (parent == grandpa()->right)) {
+				parent->rot_r();
+				right->insert_balancing(5);
+			}
+			else {
+				insert_balancing(5);
+			}
+			break;
+
+		case 5:
+			parent->color = 'b';
+			grandpa()->color = 'r';
+
+			if ((this == parent->left) & (parent == grandpa()->left)) {
+				grandpa()->rot_r();
+			}
+			else {
+				grandpa()->rot_l();
+			}
+		}
+	}
+
+	void rot_l() {
+		Node* b = right;
+
+		b->parent = parent;
+		if (parent != 0) {
+			prnt_side() = b;
+		}
+
+		right = b->left;
+		if (right != nullptr) {
+			right->parent = this;
+		}
+
+		parent = b;
+		b->left = this;
+	}
+
+	void rot_r() {
+		Node* a = left;
+
+		a->parent = parent;
+		if (parent != 0) {
+			prnt_side() = a;
+		}
+
+		left = a->right;
+		if (left != nullptr) {
+			left->parent = this;
+		}
+
+		parent = a;
+		a->right = this;
+	}
+
+	Node* grandpa() {
+		if ((parent != nullptr) & (parent->parent != nullptr)) {
+			return parent->parent;
+		}
+		else {
+			return nullptr;
+		}
+	}
+
+	Node* uncle() {
+		if (grandpa() == nullptr) {
+			return nullptr;
+		}
+
+		if (grandpa()->left == parent) {
+			return grandpa()->right;
+		}
+		else {
+			return grandpa()->left;
+		}
+	}
 
 public:
+
 	Item value;
 	Node* parent;
 	Node* left;
@@ -57,22 +231,6 @@ public:
 		}
 	}
 
-	void add_son(Item val) {
-		Node *n = new Node(val);
-
-		if (val < value) {
-			left = n;
-		}
-		else if (val >= value) {
-			right = n;
-		}
-
-		n->parent = this;
-		
-		//FIXME!
-		n->insert_balancing();
-	}
-
 	Node* find(Item val, bool print = 0) {
 
 		if (val == value) {
@@ -95,29 +253,6 @@ public:
 			return nullptr;
 		}
 	}
-
-	Node*& prnt_side() {
-		
-		if (parent != nullptr) {
-			if (parent->left == this) {
-				return parent->left;
-			}
-			else {
-				return parent->right;
-			}
-		}
-	}
-
-	Node* son_side() {
-		if ((left == nullptr) ^ (right == nullptr)) {
-			if (left != nullptr) {
-				return left;
-			}
-			else {
-				return right;
-			}
-		}
-	} 
 
 	void del() {
 	
@@ -148,18 +283,6 @@ public:
 		}
 	}
 
-	bool del(Item val) {
-		Node* n = find(val, 1);
-
-		if (n == nullptr) {
-			return false;
-		}
-		else {
-			n->del();
-			return true;
-		}
-	}
-
 	void print() {
 
 		print_node();
@@ -186,127 +309,6 @@ public:
 		cout << "\nvalue= " << value << '\n';
 		cout << "color= " << color << '\n';
     }
-
-	//Red-Black balancing
-
-	void rot_l() {
-		Node* b = right;
-
-		b->parent = parent;
-		if (parent != 0) {
-			prnt_side() = b;
-		}
-
-		right = b->left;
-		if (right != nullptr) {
-			right->parent = this;
-		}
-
-		parent = b;
-		b->left = this;
-	}
-
-	void rot_r() {
-		Node* a = left;
-
-		a->parent = parent;
-		if (parent != 0) {
-			prnt_side() = a;
-		}
-
-		left = a->right;
-		if (left != nullptr){
-			left->parent = this;
-		}
-
-		parent = a;
-		a->right = this;
-	}
-
-	Node* grandpa() {
-		if ( (parent != nullptr) & (parent->parent != nullptr) ) {
-			return parent->parent;
-		}
-		else {
-			return nullptr;
-		}
-	}
-
-	Node* uncle() {
-		if (grandpa() == nullptr) {
-			return nullptr;
-		}
-
-		if (grandpa()->left == parent) {
-			return grandpa()->right;
-		}
-		else {
-			return grandpa()->left;
-		}
-	}
-
-	void insert_balancing(int c = 0) {
-		
-		if (c != 5) {
-			if (parent == nullptr) {
-				c = 1;
-			}
-			else if (parent->color == 'b') {
-				c = 2;
-			}
-			else if  (uncle() != nullptr) {
-				if (uncle()->color == 'r') {
-					c = 3;
-				}
-				else {
-					c = 4;
-				}
-			}
-		}
-
-		switch (c) {
-
-		case 1:
-			color = 'b';
-			break;
-
-		case 2:
-			return;
-
-		case 3:
-			parent->color = 'b';
-			uncle()->color = 'b';
-			grandpa()->color = 'r';
-			grandpa()->insert_balancing();
-			break;
-
-		case 4:
-
-			if ( (this == parent->right) & (parent == grandpa()->left) ){
-				parent->rot_l();
-				left->insert_balancing(5);
-			}
-			else if ( (this == parent->left) & (parent == grandpa()->right) ) {
-				parent->rot_r();
-				right->insert_balancing(5);
-			}
-			else {
-				insert_balancing(5);
-			}
-			break;
-
-		case 5:
-			parent->color = 'b';
-			grandpa()->color = 'r';
-
-			if ( (this == parent->left) & (parent == grandpa()->left) ) {
-				grandpa()->rot_r();
-			}
-			else {
-				grandpa()->rot_l();
-			}
-		}
-	}
 };
 
 //void cmds(Node*);
