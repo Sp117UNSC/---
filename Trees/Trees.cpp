@@ -7,8 +7,8 @@
 using namespace std;
 
 template <class Item>
-class Node
-{
+class Node{
+
 private:
 
 	void add_son(Item val) {
@@ -27,15 +27,32 @@ private:
 		n->insert_balancing();
 	}
 
-	bool del(Item val) {
-		Node* n = find(val, 1);
+	void del() {
 
-		if (n == nullptr) {
-			return false;
+		if ((left == nullptr) & (right == nullptr)) {
+			if (parent != nullptr) {
+				prnt_side() = nullptr;
+			}
+			delete this;
+		}
+		else if ((left != nullptr) & (right != nullptr)) {
+			Node* m = right;
+			if (right->left == nullptr) {
+				value = m->value;
+				right->parent = this;
+				right = m->right;
+				delete m;
+			}
+			else {
+				Node* x = m->left;
+				value = x->value;
+				x->del();
+			}
 		}
 		else {
-			n->del();
-			return true;
+			prnt_side() = son_side();
+			son_side()->parent = parent;
+			delete this;
 		}
 	}
 
@@ -254,32 +271,15 @@ public:
 		}
 	}
 
-	void del() {
-	
-		if ((left == nullptr) & (right == nullptr)) {
-			if (parent != nullptr) {
-				prnt_side() = nullptr;
-			}
-			delete this;
-		}
-		else if ((left != nullptr) & (right != nullptr)) {
-			Node* m = right;
-			if (right->left == nullptr) {
-				value = m->value;
-				right->parent = this;
-				right = m->right;
-				delete m;
-			}
-			else {
-				Node* x = m->left;
-				value = x->value;
-				x->del();
-			}
+	bool del(Item val) {
+		Node* n = find(val, 1);
+
+		if (n == nullptr) {
+			return false;
 		}
 		else {
-			prnt_side() = son_side();
-			son_side()->parent = parent;
-			delete this;
+			n->del();
+			return true;
 		}
 	}
 
@@ -326,6 +326,7 @@ int main() {
 	tree->add("Bitch");
 	tree->add("Suka");
 	tree->add("Nevelniy blet!");
+	tree->del("Nigga");
 	tree->print();
 
 	delete tree;
