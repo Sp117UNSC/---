@@ -315,18 +315,18 @@ public:
 //void help();
 
 int main() {
-	Node<string> *tree = new Node<string>("Mazafaka");
+	Node<const char*> *tree = new Node<const char*>("Mazafaza");
 
-/*
+	/*
 	cout << "Type \"help\" to see the list of commands\n";
 
 	cmds(tree)*/;
 
-	tree->add("Nigga!");
-	tree->add("Bitch");
-	tree->add("Suka");
-	tree->add("Nevelniy blet!");
-	tree->del("Nigga");
+	tree->add("Nig!");
+	tree->add("Bit");
+	tree->add("Sumo");
+	tree->add("Nevelniy ");
+	tree->del("Nig");
 	tree->print();
 
 	delete tree;
