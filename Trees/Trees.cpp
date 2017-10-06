@@ -250,25 +250,24 @@ public:
 
 	Node* find(Item val, bool print = 0) {
 
+		Node* res = nullptr;
 		if (val == value) {
-			if (print){
+			if (print) {
 				print_node();
 			}
-			return this;
+			res = this;
 		}
 		else if ((left != nullptr) & (val < value)) {
-			left->find(val, print);
+			res = left->find(val, print);
 		}
-
 		else if ((right != nullptr) & (val > value)) {
-			right->find(val, print);
+			res = right->find(val, print);
 		}
-		else {
+		else if (res == nullptr)
 			if (print) {
 				cout << "\nNo such node\n";
 			}
-			return nullptr;
-		}
+		return res;
 	}
 
 	bool del(Item val) {
@@ -315,13 +314,14 @@ public:
 //void help();
 
 int main() {
+	/*Node<void> *tree = new Node<void>();
+
+
+	cout << "type \"help\" to see the list of commands\n";
+
+	cmds(tree);*/
+
 	Node<string> *tree = new Node<string>("Mazafaka");
-
-/*
-	cout << "Type \"help\" to see the list of commands\n";
-
-	cmds(tree)*/;
-
 	tree->add("Nigga!");
 	tree->add("Bitch");
 	tree->add("Suka");
