@@ -1,4 +1,4 @@
-// Trees.cpp: определяет точку входа для консольного приложения.
+// Trees.cpp: Г®ГЇГ°ГҐГ¤ГҐГ«ГїГҐГІ ГІГ®Г·ГЄГі ГўГµГ®Г¤Г  Г¤Г«Гї ГЄГ®Г­Г±Г®Г«ГјГ­Г®ГЈГ® ГЇГ°ГЁГ«Г®Г¦ГҐГ­ГЁГї.
 //
 
 #include "stdafx.h"
@@ -322,11 +322,11 @@ int main() {
 	cmds(tree);*/
 
 	Node<string> *tree = new Node<string>("Mazafaka");
-	tree->add("Nigga!");
-	tree->add("Bitch");
-	tree->add("Suka");
-	tree->add("Nevelniy blet!");
-	tree->del("Nigga");
+	tree->add("Nuts!");
+	tree->add("Bravo");
+	tree->add("Sierra");
+	tree->add("Never before!");
+	tree->del("Nuts");
 	tree->print();
 
 	delete tree;
