@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include <string>
 #include <iostream>
+#include <list>
 using namespace std;
 
 template <class Item>
@@ -23,7 +24,6 @@ private:
 
 		n->parent = this;
 
-		//FIXME!
 		n->insert_balancing();
 	}
 
@@ -57,7 +57,7 @@ private:
 	}
 
 	Node*& prnt_side() {
-
+	
 		if (parent != nullptr) {
 			if (parent->left == this) {
 				return parent->left;
@@ -310,146 +310,184 @@ public:
     }
 };
 
-//void cmds(Node*);
-//void help();
+template <class Item>
+void cmds(Node<Item>*);
+void help();
 
 int main() {
-	/*Node<void> *tree = new Node<void>();
 
+	cout << "Enter type of tree elements \n";
+	string type;
+	cin >> type;
+
+	list<string> types = { "int","long","double","char","string" };
+
+	int c = 0;
+	for (string s : types) {
+		if (type == s) {
+			break;
+		}
+		c++;
+	}
+
+	switch (c) {
+	case 0:
+		Node<int> *tree = new Node<int>();
+		cmds( tree,*(&stoi)(const string) );
+	case 1:
+		Node<long> *tree = new Node<long>();
+		cmds(tree);
+	case 2:
+		Node<double> *tree = new Node<double>();
+		cmds(tree);
+	case 3:
+		Node<char> *tree = new Node<char>();
+		cmds(tree);
+	case 4:
+		Node<string> *tree = new Node<string>();
+		cmds(tree);
+
+	default:
+		cout << "\nWrong type!\n";
+	}
 
 	cout << "type \"help\" to see the list of commands\n";
 
-	cmds(tree);*/
 
-	Node<string> *tree = new Node<string>("Mazafaka");
+	/*Node<string> *tree = new Node<string>("Mazafaka");
 	tree->add("Nuts!");
 	tree->add("Bravo");
 	tree->add("Sierra");
 	tree->add("Never before!");
 	tree->del("Nuts");
-	tree->print();
+	tree->print();*/
 
-	delete tree;
+	//delete tree;
 
 	return 0;
 }
 
-//void cmds(Node* tree) {
-//	string c;
-//
-//	bool print_mode = true;
-//	bool cmd_print = true;
-//
-//	while (c != "exit") {
-//
-//		if ((print_mode) & (tree != nullptr) & cmd_print) {
-//			tree->print();
-//			cout << "\n";
-//		}
-//
-//		cmd_print = true;
-//
-//		cout << "\n";
-//		getline(cin, c);
-//		while (c.back() == ' ') {
-//			c.erase(c.end()-1);
-//		}
-//
-//		if (c.find("add nodes") == 0) {
-//			getline(cin, c);
-//			if (c.back() != ' ') {
-//				c.append(" ");
-//			}
-//			while (c.begin() != c.end()) {
-//				string s = c.substr(0, c.find(' ')+1);
-//				c.erase(0, c.find(' ')+1);
-//				if (tree != nullptr) {
-//					tree->add(stoi(s));
-//				}
-//				else {
-//					tree = new Node(stoi(s),'b');
-//				}
-//
-//				while (tree->parent != nullptr) {
-//					tree = tree->parent;
-//				}
-//			}
-//		}
-//		else if (c.find("add ") == 0) {
-//			bool success;
-//			if (tree == nullptr) {
-//				tree = new Node(stoi(c.substr(c.rfind(" ") + 1)), 'b');
-//				success = true;
-//			}
-//			else {
-//				success = tree->add(stoi(c.substr(c.rfind(" ") + 1)));
-//			}
-//			if (!success) {
-//				cmd_print = false;
-//			}
-//			
-//			while (tree->parent != nullptr) {
-//				tree = tree->parent;
-//			}
-//
-//		}
-//		else if ((c.find("find ") == 0) & (tree != nullptr)) {
-//			tree->find(stoi(c.substr(c.rfind(" ") + 1)), 1);
-//			cmd_print = false;
-//		}
-//		else if ((c.find("del subtree ") == 0) & (tree != nullptr)) {
-//			Node *n = tree->find(stoi(c.substr(c.rfind(" ") + 1)));
-//			delete n;
-//			if (n == tree) {
-//				tree = nullptr;
-//			}
-//		}
-//		else if ((c.find("del tree") == 0) & (tree != nullptr)) {
-//			delete tree;
-//			tree = nullptr;
-//		}
-//		else if ((c.find("del ") == 0) & (tree != nullptr)) {
-//			bool success;
-//			success = tree->del(stoi(c.substr(c.rfind(" ") + 1)));
-//			if (!success) {
-//				cmd_print = false;
-//			}
-//		}
-//		else if (c.find("print mode ") == 0) {
-//			print_mode = stoi(c.substr(c.rfind(" ") + 1));
-//			cmd_print = false;
-//		}
-//		else if (c.find("print mode") == 0) {
-//			cout << "\nprint mode " << print_mode << '\n';
-//			cmd_print = false;
-//		}
-//		else if ((c.find("print") == 0) & (tree != nullptr)) {
-//			cout << '\n';
-//			tree->print();
-//			cmd_print = false;
-//		}
-//		else if (c.find("help") == 0) {
-//			cout << '\n';
-//			help();
-//			cmd_print = false;
-//		}
-//		else {
-//			cout << "\nWrong command\n";
-//			cmd_print = false;
-//		}
-//
-//	}
-//
-//}
-//void help() {
-//	cout << "\nadd [val]         - adds a node with value [val] to the tree,\n";
-//	cout << "                    or creates new tree if tree is empty\n";
-//	cout << "\nadd nodes         - adds array of values separated py spaces to tree\n";
-//	cout << "\ndel [val]         - deletes node with the value [val]\n";
-//	cout << "\ndel subtree [val] - deltes node vith the value [val] and all its subtrees\n";
-//	cout << "\ndel tree          - deletes whole tree\n";
-//	cout << "\nprint             - prints tree\n";
-//	cout << "\nprint mode [val]  - displays(or sets, when [val] is given) print_mode parameter,\n";
-//	cout << "                    which enables tree pritnting after each change\n";
-//	cout << "\nhelp              - shows the list of commans\n";
-//}
+void treetype() {
+	
+}
+
+template <class Item>
+void cmds(Node<Item>* tree, int*) {
+	string c;
+
+	bool print_mode = true;
+	bool cmd_print = true;
+
+	while (c != "exit") {
+
+		if ((print_mode) & (tree != nullptr) & cmd_print) {
+			tree->print();
+			cout << "\n";
+		}
+
+		cmd_print = true;
+
+		cout << "\n";
+		getline(cin, c);
+		while (c.back() == ' ') {
+			c.erase(c.end()-1);
+		}
+
+		if (c.find("add nodes") == 0) {
+			getline(cin, c);
+			if (c.back() != ' ') {
+				c.append(" ");
+			}
+			while (c.begin() != c.end()) {
+				string s = c.substr(0, c.find(' ')+1);
+				c.erase(0, c.find(' ')+1);
+				if (tree != nullptr) {
+					tree->add(s);
+				}
+				else {
+					tree = new Node<Item>(s,'b');
+				}
+
+				while (tree->parent != nullptr) {
+					tree = tree->parent;
+				}
+			}
+		}
+		else if (c.find("add ") == 0) {
+			bool success;
+			if (tree == nullptr) {
+				tree = new Node<Item>(c.substr(c.rfind(" ") + 1), 'b');
+				success = true;
+			}
+			else {
+				success = tree->add(c.substr(c.rfind(" ") + 1));
+			}
+			if (!success) {
+				cmd_print = false;
+			}
+			
+			while (tree->parent != nullptr) {
+				tree = tree->parent;
+			}
+
+		}
+		else if ((c.find("find ") == 0) & (tree != nullptr)) {
+			tree->find(c.substr(c.rfind(" ") + 1), 1);
+			cmd_print = false;
+		}
+		else if ((c.find("del subtree ") == 0) & (tree != nullptr)) {
+			Node<Item> *n = tree->find(c.substr(c.rfind(" ") + 1));
+			delete n;
+			if (n == tree) {
+				tree = nullptr;
+			}
+		}
+		else if ((c.find("del tree") == 0) & (tree != nullptr)) {
+			delete tree;
+			tree = nullptr;
+		}
+		else if ((c.find("del ") == 0) & (tree != nullptr)) {
+			bool success;
+			success = tree->del(c.substr(c.rfind(" ") + 1));
+			if (!success) {
+				cmd_print = false;
+			}
+		}
+		else if (c.find("print mode ") == 0) {
+			print_mode = stoi(c.rfind(" ") + 1);
+			cmd_print = false;
+		}
+		else if (c.find("print mode") == 0) {
+			cout << "\nprint mode " << print_mode << '\n';
+			cmd_print = false;
+		}
+		else if ((c.find("print") == 0) & (tree != nullptr)) {
+			cout << '\n';
+			tree->print();
+			cmd_print = false;
+		}
+		else if (c.find("help") == 0) {
+			cout << '\n';
+			help();
+			cmd_print = false;
+		}
+		else {
+			cout << "\nWrong command\n";
+			cmd_print = false;
+		}
+
+	}
+
+}
+void help() {
+	cout << "\nadd [val]         - adds a node with value [val] to the tree,\n";
+	cout << "                    or creates new tree if tree is empty\n";
+	cout << "\nadd nodes         - adds array of values separated py spaces to tree\n";
+	cout << "\ndel [val]         - deletes node with the value [val]\n";
+	cout << "\ndel subtree [val] - deltes node vith the value [val] and all its subtrees\n";
+	cout << "\ndel tree          - deletes whole tree\n";
+	cout << "\nprint             - prints tree\n";
+	cout << "\nprint mode [val]  - displays(or sets, when [val] is given) print_mode parameter,\n";
+	cout << "                    which enables tree pritnting after each change\n";
+	cout << "\nhelp              - shows the list of commans\n";
+}
